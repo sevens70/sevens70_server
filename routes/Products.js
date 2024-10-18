@@ -8,6 +8,9 @@ import {
 
 const productRouter = express.Router();
 
-productRouter.post("/", createProduct).get("/", fetchAllProducts);
+productRouter.post('/', createProduct)
+             .get('/', fetchAllProducts)
+             .get('/:id', fetchProductById)
+             .patch('/:id', updateProduct);
 
 export { productRouter };

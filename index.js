@@ -18,6 +18,9 @@ import { authRouter } from "./routes/Auth.js";
 import { User } from "./model/User.js";
 import { isAuth, sanitizeUser, cookieExtractor } from "./services/common.js";
 import { resolve } from "path";
+import { categoriesRouter } from "./routes/Categories.js";
+import { brandsRouter } from "./routes/Brands.js";
+import { userRouter } from "./routes/Users.js";
 
 // Webhook
 
@@ -45,6 +48,9 @@ server.use(
 server.use(json()); // to parse req.body
 
 server.use("/products", isAuth(), productRouter);
+server.use("/categories", isAuth(), categoriesRouter);
+server.use("/brands", isAuth(), brandsRouter);
+server.use("/users", isAuth(), userRouter);
 server.use("/auth", authRouter);
 server.get("*", (req, res) => res.sendFile(resolve("build", "index.html")));
 
