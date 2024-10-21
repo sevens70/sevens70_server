@@ -1,10 +1,10 @@
-import { User } from '../model/User.js';
-import { randomBytes, pbkdf2 } from 'crypto';
-import { sanitizeUser } from '../services/common.js';
-import jwt  from 'jsonwebtoken';
+import { User } from "../model/User.js";
+import { randomBytes, pbkdf2 } from "crypto";
+import { sanitizeUser } from "../services/common.js";
+import jwt from "jsonwebtoken";
 
 export async function createUser(req, res) {
-  console.log("sign req", req.body)
+  console.log("sign req", req.body);
   try {
     const salt = randomBytes(16);
     pbkdf2(
@@ -12,7 +12,7 @@ export async function createUser(req, res) {
       salt,
       310000,
       32,
-      'sha256',
+      "sha256",
       async function (err, hashedPassword) {
         const user = new User({ ...req.body, password: hashedPassword, salt });
         const doc = await user.save();
@@ -27,18 +27,18 @@ export async function createUser(req, res) {
               process.env.JWT_SECRET_KEY
             );
             res
-              .cookie('jwt', token, {
+              .cookie("jwt", token, {
                 expires: new Date(Date.now() + 3600000),
                 httpOnly: true,
               })
               .status(201)
-              .json({ id: doc.id, role: doc.role });
+              .json({ id: doc.id, role: doc.role, name: doc.name });
           }
         });
       }
     );
   } catch (err) {
-    console.log("error from auth controller", err)
+    console.log("error from auth controller", err);
     res.status(400).json(err);
   }
 }
@@ -46,21 +46,21 @@ export async function createUser(req, res) {
 export async function loginUser(req, res) {
   const user = req.user;
   res
-    .cookie('jwt', user.token, {
+    .cookie("jwt", user.token, {
       expires: new Date(Date.now() + 3600000),
       httpOnly: true,
     })
     .status(201)
-    .json({ id: user.id, role: user.role });
+    .json({ id: user.id, role: user.role, name: doc.name });
 }
 
 export async function logout(req, res) {
   res
-    .cookie('jwt', null, {
+    .cookie("jwt", null, {
       expires: new Date(Date.now()),
       httpOnly: true,
     })
-    .sendStatus(200)
+    .sendStatus(200);
 }
 
 export async function checkAuth(req, res) {

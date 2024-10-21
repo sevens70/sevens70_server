@@ -52,6 +52,8 @@ server.use("/categories", isAuth(), categoriesRouter);
 server.use("/brands", isAuth(), brandsRouter);
 server.use("/users", isAuth(), userRouter);
 server.use("/auth", authRouter);
+// server.use("/cart", isAuth(), cartRouter);
+// server.use("/orders", isAuth(), orderRouter)
 server.get("*", (req, res) => res.sendFile(resolve("build", "index.html")));
 
 // Passport Strategies
