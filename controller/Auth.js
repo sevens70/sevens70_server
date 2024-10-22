@@ -51,7 +51,7 @@ export async function loginUser(req, res) {
       httpOnly: true,
     })
     .status(201)
-    .json({ id: user.id, role: user.role, name: doc.name });
+    .json({ id: user.id, role: user.role, name: user?.name });
 }
 
 export async function logout(req, res) {
