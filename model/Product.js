@@ -28,6 +28,7 @@ const productSchema = new Schema({
   images: { type: [String], required: true },
   colors: { type: [Schema.Types.Mixed] },
   sizes: { type: [Schema.Types.Mixed] },
+  tags: { type: [Schema.Types.Mixed] },
   highlights: { type: [String] },
   discountPrice: { type: Number },
   deleted: { type: Boolean, default: false },

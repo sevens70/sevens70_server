@@ -4,7 +4,6 @@ import { sanitizeUser } from "../services/common.js";
 import jwt from "jsonwebtoken";
 
 export async function createUser(req, res) {
-  console.log("sign req", req.body);
   try {
     const salt = randomBytes(16);
     pbkdf2(

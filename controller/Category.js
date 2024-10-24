@@ -22,17 +22,7 @@ import { Category } from "../model/Category.js";
 
 export async function addSubCategory(req, res) {
   const { categoryName, subcategoryName } = req.body;
-
-  //  const product = new Product(req.body);
-  //  product.discountPrice = Math.round(
-  //    product.price * (1 - product.discountPercentage / 100)
-  //  );
-  //  try {
-  //    const doc = await product.save();
-  //    res.status(201).json(doc);
-  //  } catch (err) {
-  //    res.status(400).json(err);
-  //  }
+  const allCategories = await Category.find({}).exec();
   try {
     // Find the category by name
     let category = await Category.findOne({ name: categoryName });
@@ -70,6 +60,14 @@ export async function addSubCategory(req, res) {
   } catch (error) {
     console.error("Error adding subcategory:", error);
     res.status(500).json({ message: "Server error", error: error.message });
+  }
+}
+export async function fetchCategories(req, res) {
+  try {
+    const categories = await Category.find({}).exec();
+    res.status(200).json(categories);
+  } catch (err) {
+    res.status(400).json(err);
   }
 }
 
