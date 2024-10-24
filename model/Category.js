@@ -2,15 +2,22 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
-const categorySchema = new Schema({
-  label: { type: String, required: true, unique: true },
-  value: { type: String, required: true, unique: true },
+const subcategorySchema = new Schema({
+  name: { type: String, required: true },
 });
 
+const categorySchema = new Schema({
+  // name: { type: String, required: true, unique: true }, 
+  name: { type: String, required: true },
+  subcategories: [subcategorySchema],
+});
+
+// Virtual ID field for the category
 const virtual = categorySchema.virtual("id");
 virtual.get(function () {
   return this._id;
 });
+
 categorySchema.set("toJSON", {
   virtuals: true,
   versionKey: false,

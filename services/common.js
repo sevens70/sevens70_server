@@ -1,8 +1,7 @@
-
-import passport from 'passport';
+import passport from "passport";
 
 export const isAuth = (req, res, done) => {
-  return passport.authenticate('jwt');
+  return passport.authenticate("jwt");
 };
 
 export const sanitizeUser = (user) => {
@@ -12,7 +11,7 @@ export const sanitizeUser = (user) => {
 export const cookieExtractor = function (req) {
   let token = null;
   if (req && req.cookies) {
-    token = req.cookies['jwt'];
+    token = req.cookies["jwt"];
   }
   return token;
 };
