@@ -44,13 +44,23 @@ export async function createUser(req, res) {
 
 export async function loginUser(req, res) {
   const user = req.user;
+  console.log("user token 01", user.token);
   res
     .cookie("jwt", user.token, {
-      expires: new Date(Date.now() + 3600000),
+      expires: new Date(Date.now() + 3600000), // Cookie expires in 1 hour
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Only send over HTTPS in production
+      sameSite: "Lax", // Adjust for cross-origin requests if needed
+      path: "/", // The cookie will be accessible for all routes
     })
+
     .status(201)
-    .json({ id: user.id, role: user.role, name: user?.name, token: user.token });
+    .json({
+      id: user.id,
+      role: user.role,
+      name: user?.name,
+      token: user.token,
+    });
 }
 
 export async function logout(req, res) {

@@ -28,7 +28,7 @@ const endpointSecret = process.env.ENDPOINT_SECRET;
 const opts = {};
 opts.jwtFromRequest = cookieExtractor;
 opts.secretOrKey = process.env.JWT_SECRET_KEY;
-
+const allowedOrigins = ["http://localhost:3000", "http://localhost:3001"];
 // Middlewares
 server.use(cookieParser());
 server.use(
@@ -40,11 +40,26 @@ server.use(
 );
 server.use(passport.initialize());
 server.use(passport.session());
+// server.use(
+//   cors({
+//     exposedHeaders: ["X-Total-Count"],
+//   })
+// );
 server.use(
   cors({
+    origin: (origin, callback) => {
+      console.log("Origin:", origin);
+      if (allowedOrigins.includes(origin) || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
     exposedHeaders: ["X-Total-Count"],
   })
 );
+
 server.use(json()); // to parse req.body
 
 server.use("/products", isAuth(), productRouter);
@@ -66,6 +81,7 @@ passport.use(
   ) {
     // by default passport uses username
     try {
+      // console.log("user 01", await User.find({}));
       const user = await User.findOne({ email: email });
       if (!user) {
         return done(null, false, { message: "invalid credentials" }); // for safety
@@ -115,8 +131,6 @@ passport.serializeUser(function (user, cb) {
     return cb(null, { id: user.id, role: user.role });
   });
 });
-
-// this changes session variable req.user when called from authorized request
 
 passport.deserializeUser(function (user, cb) {
   process.nextTick(function () {
