@@ -21,6 +21,8 @@ import { resolve } from "path";
 import { categoriesRouter } from "./routes/Categories.js";
 import { brandsRouter } from "./routes/Brands.js";
 import { userRouter } from "./routes/Users.js";
+import { cartRouter } from "./routes/Cart.js";
+import { orderRouter } from "./routes/Order.js";
 
 // Webhook
 
@@ -67,7 +69,8 @@ server.use("/categories", isAuth(), categoriesRouter);
 server.use("/brands", isAuth(), brandsRouter);
 server.use("/users", isAuth(), userRouter);
 server.use("/auth", authRouter);
-// server.use("/cart", isAuth(), cartRouter);
+server.use("/cart", isAuth(), cartRouter);
+server.use("/orders", isAuth(), orderRouter);
 // server.use("/orders", isAuth(), orderRouter)
 // server.get("*", (req, res) => res.sendFile(resolve("build", "index.html")));
 
