@@ -23,6 +23,7 @@ import { brandsRouter } from "./routes/Brands.js";
 import { userRouter } from "./routes/Users.js";
 import { cartRouter } from "./routes/Cart.js";
 import { orderRouter } from "./routes/Order.js";
+import { favouriteRouter } from "./routes/Favourite.js";
 
 // Webhook
 
@@ -70,6 +71,7 @@ server.use("/brands", isAuth(), brandsRouter);
 server.use("/users", isAuth(), userRouter);
 server.use("/auth", authRouter);
 server.use("/cart", isAuth(), cartRouter);
+server.use("/favourite", isAuth(), favouriteRouter);
 server.use("/orders", isAuth(), orderRouter);
 // server.use("/orders", isAuth(), orderRouter)
 // server.get("*", (req, res) => res.sendFile(resolve("build", "index.html")));
