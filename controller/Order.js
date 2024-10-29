@@ -11,7 +11,6 @@ export async function fetchOrdersByUser(req, res) {
   const { id } = req.user;
   try {
     const orders = await Order.find({ user: id });
-
     res.status(200).json(orders);
   } catch (err) {
     res.status(400).json(err);
@@ -120,3 +119,36 @@ export async function fetchAllOrders(req, res) {
     res.status(400).json(err);
   }
 }
+export async function fetchOrdersByUserId(req, res) {
+  const { id } = req.user;
+  
+  // Combine the filters for deleted and user ID
+  let query = Order.find({ deleted: { $ne: true }, user: id });
+  let totalOrdersQuery = Order.find({ deleted: { $ne: true }, user: id });
+
+  // Sort the query if sorting parameters are provided
+  if (req.query._sort && req.query._order) {
+    query = query.sort({ [req.query._sort]: req.query._order });
+  }
+
+  // Get the total count of orders matching the criteria
+  const totalDocs = await totalOrdersQuery.countDocuments().exec();
+  console.log({ totalDocs });
+
+  // Apply pagination if pagination parameters are provided
+  if (req.query._page && req.query._limit) {
+    const pageSize = parseInt(req.query._limit);
+    const page = parseInt(req.query._page);
+    query = query.skip(pageSize * (page - 1)).limit(pageSize);
+  }
+
+  try {
+    // Execute the query and send the response with pagination headers
+    const docs = await query.exec();
+    res.set("X-Total-Count", totalDocs);
+    res.status(200).json(docs);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+}
+

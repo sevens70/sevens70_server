@@ -5,6 +5,7 @@ import {
   deleteOrder,
   updateOrder,
   fetchAllOrders,
+  fetchOrdersByUserId,
 } from "../controller/Order.js";
 
 const orderRouter = express.Router();
@@ -14,6 +15,7 @@ orderRouter
   .get("/own/", fetchOrdersByUser)
   .delete("/:id", deleteOrder)
   .patch("/:id", updateOrder)
-  .get("/", fetchAllOrders);
+  .get("/", fetchAllOrders)
+  .get("/:id", fetchOrdersByUserId);
 
 export { orderRouter };
