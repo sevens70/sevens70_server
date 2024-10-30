@@ -32,7 +32,12 @@ const endpointSecret = process.env.ENDPOINT_SECRET;
 const opts = {};
 opts.jwtFromRequest = cookieExtractor;
 opts.secretOrKey = process.env.JWT_SECRET_KEY;
-const allowedOrigins = ["http://localhost:3000", "http://localhost:3001"];
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:3001",
+  "https://xartso-admin.vercel.app",
+  "https://xartso-client.vercel.app",
+];
 // Middlewares
 server.use(cookieParser());
 server.use(
