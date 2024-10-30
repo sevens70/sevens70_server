@@ -12,9 +12,13 @@ cloudinary.v2.config({
 export async function createProduct(req, res) {
   const product = new Product(req.body);
   // Optional discount price calculation
-  product.discountPrice = Math.round(
-    product.price * (1 - product.discountPercentage / 100)
-  );
+  if (product.discountPercentage > 0) {
+    product.discountPrice = Math.round(
+      product.price * (1 - product.discountPercentage / 100)
+    );
+  } else {
+    product.discountPrice = price;
+  }
 
   const savedProduct = await product.save();
   res.status(201).json(savedProduct);
