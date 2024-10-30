@@ -1,7 +1,18 @@
 import passport from "passport";
 
-export const isAuth = (req, res, done) => {
-  return passport.authenticate("jwt");
+export const isAuth = () => {
+  return (req, res, next) => {
+    passport.authenticate("jwt", { session: false }, (err, user, info) => {
+      if (err) {
+        return res.status(500).json({ message: "Internal Server Error" });
+      }
+      if (!user) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      req.user = user; // Attach the authenticated user to the request
+      next(); // Proceed to the next middleware or route handler
+    })(req, res, next);
+  };
 };
 
 export const sanitizeUser = (user) => {
