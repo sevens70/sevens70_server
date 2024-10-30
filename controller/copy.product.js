@@ -8,16 +8,80 @@ cloudinary.v2.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+// export async function createProduct(req, res) {
+//   // const { images, ...rest } = req.body;
+//   // ===============
+//   //  try {
+//   //    if (image) {
+//   //      const uploadedResponse = await cloudinary.uploader.upload(image, {
+//   //        upload_preset: "online-shop",
+//   //      });
+
+//   //      if (uploadedResponse) {
+//   //        const product = new Product({
+//   //          name,
+//   //          brand,
+//   //          desc,
+//   //          price,
+//   //          image: uploadedResponse,
+//   //        });
+
+//   //        const savedProduct = await product.save();
+//   //        res.status(200).send(savedProduct);
+//   //      }
+//   //    }
+//   //  } catch (error) {
+//   //    console.log(error);
+//   //    res.status(500).send(error);
+//   //  }
+//   // ===============
+//   const product = new Product(req.body);
+//   product.discountPrice = Math.round(
+//     product.price * (1 - product.discountPercentage / 100)
+//   );
+//   try {
+//     const doc = await product.save();
+//     res.status(201).json(doc);
+//   } catch (err) {
+//     res.status(400).json(err);
+//   }
+// }
 
 export async function createProduct(req, res) {
-  const product = new Product(req.body);
-  // Optional discount price calculation
-  product.discountPrice = Math.round(
-    product.price * (1 - product.discountPercentage / 100)
-  );
+  const { images, thumbnailIndex = 0, ...productData } = req.body;
 
-  const savedProduct = await product.save();
-  res.status(201).json(savedProduct);
+  try {
+    // Upload all images to Cloudinary and get URLs
+    const uploadedImages = await Promise.all(
+      images.map(async (image) => {
+        const response = await cloudinary.v2.uploader.upload(image, {
+          upload_preset: "product-images",
+        });
+        return response.secure_url;
+      })
+    );
+
+    // Set thumbnail as the specified image or default to the first image
+    const thumbnail = uploadedImages[thumbnailIndex];
+
+    // Create the product with images and thumbnail
+    const product = new Product({
+      ...productData,
+      images: uploadedImages,
+      thumbnail,
+    });
+
+    // Optional discount price calculation
+    product.discountPrice = Math.round(
+      product.price * (1 - product.discountPercentage / 100)
+    );
+
+    const savedProduct = await product.save();
+    res.status(201).json(savedProduct);
+  } catch (error) {
+    console.error("Error uploading images:", error);
+    res.status(500).json({ error: "Failed to create product" });
+  }
 }
 
 export async function fetchAllProducts(req, res) {

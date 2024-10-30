@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cloudinary": "^2.5.1",
     "connect-sqlite": "^0.0.1",
     "connect-sqlite3": "^0.9.13",
     "cookie-parser": "^1.4.6",

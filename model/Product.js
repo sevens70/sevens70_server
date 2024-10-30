@@ -27,7 +27,7 @@ const productSchema = new Schema({
   subcategory: { type: String },
   thumbnail: { type: String, required: true },
   model: { type: String, required: true },
-  images: { type: [String], required: true },
+  images: { type: [Object] },
   colors: { type: [Schema.Types.Mixed] },
   sizes: { type: [Schema.Types.Mixed] },
   tags: { type: [Schema.Types.Mixed] },
