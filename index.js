@@ -24,6 +24,7 @@ import { userRouter } from "./routes/Users.js";
 import { cartRouter } from "./routes/Cart.js";
 import { orderRouter } from "./routes/Order.js";
 import { favouriteRouter } from "./routes/Favourite.js";
+import { settingsRouter } from "./routes/Settings.js";
 
 // Webhook
 
@@ -73,6 +74,7 @@ server.use("/auth", authRouter);
 server.use("/cart", isAuth(), cartRouter);
 server.use("/favourite", isAuth(), favouriteRouter);
 server.use("/orders", isAuth(), orderRouter);
+server.use("/settings", isAuth(), settingsRouter);
 // server.use("/orders", isAuth(), orderRouter)
 // server.get("*", (req, res) => res.sendFile(resolve("build", "index.html")));
 
