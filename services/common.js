@@ -17,6 +17,8 @@ export const sanitizeUser = (user) => {
 // };
 export const cookieExtractor = function (req) {
   let token = null;
+
+  // Check for token in Authorization header
   if (req.headers && req.headers.authorization) {
     const authHeader = req.headers.authorization;
     if (authHeader.startsWith("Bearer ")) {
@@ -24,8 +26,12 @@ export const cookieExtractor = function (req) {
     }
   }
 
-  // if (req && req.cookies) {
-  //   token = req.cookies["jwt"];
-  // }
+  // If token not found in Authorization header, check cookies
+  if (!token && req.cookies) {
+    token = req.cookies["jwt"];
+  }
+
+  console.log("Extracted token:", token, typeof token);
+
   return token;
 };
