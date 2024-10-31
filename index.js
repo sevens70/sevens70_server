@@ -54,10 +54,23 @@ server.use(passport.session());
 //     exposedHeaders: ["X-Total-Count"],
 //   })
 // );
+// server.use(
+//   cors({
+//     origin: (origin, callback) => {
+//       console.log("Origin:", origin);
+//       if (allowedOrigins.includes(origin) || !origin) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error("Not allowed by CORS"));
+//       }
+//     },
+//     credentials: true,
+//     exposedHeaders: ["X-Total-Count"],
+//   })
+// );
 server.use(
   cors({
     origin: (origin, callback) => {
-      console.log("Origin:", origin);
       if (allowedOrigins.includes(origin) || !origin) {
         callback(null, true);
       } else {
@@ -66,6 +79,7 @@ server.use(
     },
     credentials: true,
     exposedHeaders: ["X-Total-Count"],
+    allowedHeaders: ["Authorization", "Content-Type"], // Add Authorization here
   })
 );
 
