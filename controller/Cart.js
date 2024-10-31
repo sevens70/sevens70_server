@@ -1,7 +1,7 @@
 import { Cart } from "../model/Cart.js";
 
 export async function fetchCartByUser(req, res) {
-  const { id } = req.user;
+  const { id } = req.user; // //user coming from authorize middleware 
   try {
     const cartItems = await Cart.find({ user: id }).populate("product");
     res.status(200).json(cartItems);
@@ -11,7 +11,7 @@ export async function fetchCartByUser(req, res) {
 }
 
 export async function addToCart(req, res) {
-  const { id } = req.user;
+  const { id } = req.user; //user coming from authorize middleware 
   const cart = new Cart({ ...req.body, user: id });
   try {
     const doc = await cart.save();

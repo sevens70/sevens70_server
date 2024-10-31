@@ -2,7 +2,7 @@
 import { Favourite } from "../model/Favourite.js";
 
 export async function fetchFavouriteByUser(req, res) {
-  const { id } = req.user;
+  const { id } = req.user; //user coming from authorize middleware 
   try {
     const favouriteItems = await Favourite.find({ user: id }).populate("product");
     res.status(200).json(favouriteItems);
@@ -12,7 +12,7 @@ export async function fetchFavouriteByUser(req, res) {
 }
 
 export async function addToFavourite(req, res) {
-  const { id } = req.user;
+  const { id } = req.user; //user coming from authorize middleware 
   const favourite = new Favourite({ ...req.body, user: id });
   try {
     const doc = await favourite.save();

@@ -8,7 +8,7 @@ import { Product } from "../model/Product.js";
 import { User } from "../model/User.js";
 
 export async function fetchOrdersByUser(req, res) {
-  const { id } = req.user;
+  const { id } = req.user;  //user coming from authorize middleware 
   try {
     const orders = await Order.find({ user: id });
     res.status(200).json(orders);
@@ -120,7 +120,7 @@ export async function fetchAllOrders(req, res) {
   }
 }
 export async function fetchOrdersByUserId(req, res) {
-  const { id } = req.user;
+  const { id } = req.user; //user coming from authorize middleware 
   
   // Combine the filters for deleted and user ID
   let query = Order.find({ deleted: { $ne: true }, user: id });
