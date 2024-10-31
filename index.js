@@ -79,7 +79,7 @@ server.use(
     },
     credentials: true,
     exposedHeaders: ["X-Total-Count"],
-    allowedHeaders: ["Authorization", "Content-Type"], // Add Authorization here
+    allowedHeaders: ["Authorization", "Content-Type"],
   })
 );
 
