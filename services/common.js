@@ -18,19 +18,29 @@ export const sanitizeUser = (user) => {
 export const cookieExtractor = function (req) {
   let token = null;
 
-  if (req.headers && req.headers.authorization) {
-    const authHeader = req.headers.authorization;
-    console.log("Authorization header:", authHeader);
-    if (authHeader.startsWith("Bearer ")) {
-      token = authHeader.slice(7);
-    }
-  }
+  // if (req.headers && req.headers.authorization) {
+  //   const authHeader = req.headers.authorization;
+  //   console.log("Authorization header:", authHeader);
+  //   if (authHeader.startsWith("Bearer ")) {
+  //     token = authHeader.slice(7);
+  //   }
+  // }
 
-  if (!token && req.cookies) {
+  // if (!token && req.cookies) {
+  //   token = req.cookies["jwt"];
+  //   console.log("Cookie token:", token);
+  // }
+  // =========================
+  // if (req.headers && req.headers.authorization) {
+  //   const authHeader = req.headers.authorization;
+  //   console.log("Authorization header:", authHeader);
+  //   if (authHeader.startsWith("Bearer ")) {
+  //     token = authHeader.slice(7);
+  //   }
+  // }
+
+  if (req && req.cookies) {
     token = req.cookies["jwt"];
-    console.log("Cookie token:", token);
   }
-
-  console.log("Extracted token:", token);
   return token;
 };
