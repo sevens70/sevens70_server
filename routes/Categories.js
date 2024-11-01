@@ -6,11 +6,16 @@
 
 // export { categoriesRouter };
 import express from "express";
-import { addSubCategory, fetchCategories, getSubCategory } from "../controller/Category.js";
+import {
+  addSubCategory,
+  fetchCategories,
+  getSubCategory,
+} from "../controller/Category.js";
+import { isAuth } from "../services/common.js";
 
 const categoriesRouter = express.Router();
 categoriesRouter
-  .post("/add-subcategory", addSubCategory)
+  .post("/add-subcategory", isAuth(), addSubCategory)
   .get("/get-subcategories/:categoryName", getSubCategory)
   .get("/", fetchCategories);
 

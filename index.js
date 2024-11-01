@@ -85,17 +85,15 @@ server.use(
 
 server.use(json()); // to parse req.body
 
-server.use("/products", isAuth(), productRouter);
-server.use("/categories", isAuth(), categoriesRouter);
-server.use("/brands", isAuth(), brandsRouter);
+server.use("/products", productRouter);
+server.use("/categories", categoriesRouter);
+// server.use("/brands", isAuth(), brandsRouter);
 server.use("/users", isAuth(), userRouter);
 server.use("/auth", authRouter);
 server.use("/cart", isAuth(), cartRouter);
 server.use("/favourite", isAuth(), favouriteRouter);
 server.use("/orders", isAuth(), orderRouter);
-server.use("/settings", isAuth(), settingsRouter);
-// server.use("/orders", isAuth(), orderRouter)
-// server.get("*", (req, res) => res.sendFile(resolve("build", "index.html")));
+server.use("/settings", settingsRouter);
 
 // Passport Strategies
 passport.use(
