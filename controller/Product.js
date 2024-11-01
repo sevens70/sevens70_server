@@ -17,7 +17,7 @@ export async function createProduct(req, res) {
       product.price * (1 - product.discountPercentage / 100)
     );
   } else {
-    product.discountPrice = price;
+    product.discountPrice = product.price;
   }
 
   const savedProduct = await product.save();
