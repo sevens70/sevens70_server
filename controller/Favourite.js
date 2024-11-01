@@ -1,10 +1,11 @@
-
 import { Favourite } from "../model/Favourite.js";
 
 export async function fetchFavouriteByUser(req, res) {
-  const { id } = req.user; //user coming from authorize middleware 
+  const { id } = req.user; //user coming from authorize middleware
   try {
-    const favouriteItems = await Favourite.find({ user: id }).populate("product");
+    const favouriteItems = await Favourite.find({ user: id }).populate(
+      "product"
+    );
     res.status(200).json(favouriteItems);
   } catch (err) {
     res.status(400).json(err);
@@ -12,7 +13,7 @@ export async function fetchFavouriteByUser(req, res) {
 }
 
 export async function addToFavourite(req, res) {
-  const { id } = req.user; //user coming from authorize middleware 
+  const { id } = req.user; //user coming from authorize middleware
   const favourite = new Favourite({ ...req.body, user: id });
   try {
     const doc = await favourite.save();
@@ -23,13 +24,25 @@ export async function addToFavourite(req, res) {
   }
 }
 
+// export async function deleteFromFavourite(req, res) {
+//   const { id } = req.params;
+//   try {
+//     const doc = await Favourite.findByIdAndDelete(id);
+//     res.status(200).json(doc);
+//   } catch (err) {
+//     res.status(400).json(err);
+//   }
+// }
 export async function deleteFromFavourite(req, res) {
   const { id } = req.params;
   try {
     const doc = await Favourite.findByIdAndDelete(id);
+    if (!doc) {
+      return res.status(404).json({ message: "Item not found" });
+    }
     res.status(200).json(doc);
   } catch (err) {
-    res.status(400).json(err);
+    res.status(400).json({ error: "Failed to delete item", details: err });
   }
 }
 
