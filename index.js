@@ -17,14 +17,15 @@ import { productRouter } from "./routes/Products.js";
 import { authRouter } from "./routes/Auth.js";
 import { User } from "./model/User.js";
 import { isAuth, sanitizeUser, cookieExtractor } from "./services/common.js";
-import { resolve } from "path";
+// import { resolve } from "path";
 import { categoriesRouter } from "./routes/Categories.js";
-import { brandsRouter } from "./routes/Brands.js";
+// import { brandsRouter } from "./routes/Brands.js";
 import { userRouter } from "./routes/Users.js";
 import { cartRouter } from "./routes/Cart.js";
 import { orderRouter } from "./routes/Order.js";
 import { favouriteRouter } from "./routes/Favourite.js";
 import { settingsRouter } from "./routes/Settings.js";
+import { bannerRouter } from "./routes/Banner.js";
 
 // Webhook
 
@@ -49,25 +50,6 @@ server.use(
 );
 server.use(passport.initialize());
 server.use(passport.session());
-// server.use(
-//   cors({
-//     exposedHeaders: ["X-Total-Count"],
-//   })
-// );
-// server.use(
-//   cors({
-//     origin: (origin, callback) => {
-//       console.log("Origin:", origin);
-//       if (allowedOrigins.includes(origin) || !origin) {
-//         callback(null, true);
-//       } else {
-//         callback(new Error("Not allowed by CORS"));
-//       }
-//     },
-//     credentials: true,
-//     exposedHeaders: ["X-Total-Count"],
-//   })
-// );
 server.use(
   cors({
     origin: (origin, callback) => {
@@ -94,6 +76,7 @@ server.use("/cart", isAuth(), cartRouter);
 server.use("/favourite", isAuth(), favouriteRouter);
 server.use("/orders", isAuth(), orderRouter);
 server.use("/settings", settingsRouter);
+server.use("/banner", bannerRouter);
 
 // Passport Strategies
 passport.use(
