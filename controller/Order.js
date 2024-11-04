@@ -5,10 +5,10 @@
 
 import { Order } from "../model/Order.js";
 import { Product } from "../model/Product.js";
-import { User } from "../model/User.js";
+// import { User } from "../model/User.js";
 
 export async function fetchOrdersByUser(req, res) {
-  const { id } = req.user;  //user coming from authorize middleware 
+  const { id } = req.user; //user coming from authorize middleware
   try {
     const orders = await Order.find({ user: id });
     res.status(200).json(orders);
@@ -19,24 +19,23 @@ export async function fetchOrdersByUser(req, res) {
 
 export async function createOrder(req, res) {
   const order = new Order(req.body);
-  // here we have to update stocks;
-
-  for (let item of order.items) {
-    let product = await Product.findOne({ _id: item.product.id });
-    //  product.$inc('stock',-1*item.quantity); //might be issue here for stock validation form product----
-    // for optimum performance we should make inventory outside of product.
-    await product.save();
-  }
 
   try {
-    const doc = await order.save();
-    const user = await User.findById(order.user);
-    // we can use await for this also
-    //    sendMail({to:user.email,html:invoiceTemplate(order),subject:'Order Received' })
+    for (let item of order.items) {
+      let product = await Product.findOne({ _id: item.product.id });
+      product.stock -= item.quantity;
+      if (product.stock < 0) {
+        return res
+          .status(400)
+          .json({ error: "Insufficient stock for : " + product.title });
+      }
 
+      await product.save();
+    }
+    const doc = await order.save();
     res.status(201).json(doc);
   } catch (err) {
-    res.status(400).json(err);
+    res.status(400).json({ error: err.message || "Failed to create order" });
   }
 }
 
@@ -120,8 +119,8 @@ export async function fetchAllOrders(req, res) {
   }
 }
 export async function fetchOrdersByUserId(req, res) {
-  const { id } = req.user; //user coming from authorize middleware 
-  
+  const { id } = req.user; //user coming from authorize middleware
+
   // Combine the filters for deleted and user ID
   let query = Order.find({ deleted: { $ne: true }, user: id });
   let totalOrdersQuery = Order.find({ deleted: { $ne: true }, user: id });
@@ -151,4 +150,3 @@ export async function fetchOrdersByUserId(req, res) {
     res.status(400).json(err);
   }
 }
-
