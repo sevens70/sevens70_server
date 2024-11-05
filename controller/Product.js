@@ -25,10 +25,9 @@ export async function createProduct(req, res) {
 }
 
 export async function fetchAllProducts(req, res) {
-  // filter = {"category":["smartphone","laptops"]}
-  // sort = {_sort:"price",_order="desc"}
-  // pagination = {_page:1,_limit=10}
   let condition = {};
+
+  // Exclude deleted products if not admin
   if (!req.query.admin) {
     condition.deleted = { $ne: true };
   }
@@ -36,37 +35,98 @@ export async function fetchAllProducts(req, res) {
   let query = Product.find(condition);
   let totalProductsQuery = Product.find(condition);
 
+  // Filter by category
   if (req.query.category) {
-    query = query.find({ category: { $in: req.query.category.split(",") } });
+    const categories = req.query.category.split(",");
+    query = query.find({ category: { $in: categories } });
     totalProductsQuery = totalProductsQuery.find({
-      category: { $in: req.query.category.split(",") },
+      category: { $in: categories },
     });
-  }
-  if (req.query.brand) {
-    query = query.find({ brand: { $in: req.query.brand.split(",") } });
-    totalProductsQuery = totalProductsQuery.find({
-      brand: { $in: req.query.brand.split(",") },
-    });
-  }
-  if (req.query._sort && req.query._order) {
-    query = query.sort({ [req.query._sort]: req.query._order });
   }
 
+  // Filter by subcategory
+  if (req.query.subcategory) {
+    const subcategories = req.query.subcategory.split(",");
+    query = query.find({ subcategory: { $in: subcategories } });
+    totalProductsQuery = totalProductsQuery.find({
+      subcategory: { $in: subcategories },
+    });
+  }
+
+  // Filter by colors
+  if (req.query.colors) {
+    const colors = req.query.colors.split(",");
+    query = query.find({
+      colors: { $elemMatch: { id: { $in: colors } } },
+    });
+    totalProductsQuery = totalProductsQuery.find({
+      colors: { $elemMatch: { id: { $in: colors } } },
+    });
+  }
+
+  // Filter by sizes
+  if (req.query.sizes) {
+    const sizes = req.query.sizes.split(",");
+    query = query.find({
+      sizes: { $elemMatch: { id: { $in: sizes } } },
+    });
+    totalProductsQuery = totalProductsQuery.find({
+      sizes: { $elemMatch: { id: { $in: sizes } } },
+    });
+  }
+
+  // Filter by brand //   store database in lowercase()
+  if (req.query.brand) {
+    const brands = req.query.brand.split(",");
+    query = query.find({ brand: { $in: brands } });
+    totalProductsQuery = totalProductsQuery.find({ brand: { $in: brands } });
+  }
+
+  // Filter by discountPrice range
+  if (req.query.price) {
+    const [minPrice, maxPrice] = req.query.price.split("-").map(Number);
+    query = query.where("discountPrice").gte(minPrice).lte(maxPrice);
+    totalProductsQuery = totalProductsQuery
+      .where("discountPrice")
+      .gte(minPrice)
+      .lte(maxPrice);
+  }
+
+  // Sort products based on the specified sort order
+  if (req.query.sort) {
+    switch (req.query.sort) {
+      case "newest":
+        query = query.sort({ createdAt: -1 });
+        break;
+      case "price high - low":
+        query = query.sort({ discountPrice: -1 });
+        break;
+      case "price low - high":
+        query = query.sort({ discountPrice: 1 });
+        break;
+      default:
+        break;
+    }
+  }
+
+  // Count total documents for pagination metadata
   const totalDocs = await totalProductsQuery.count().exec();
   console.log({ totalDocs });
 
   if (req.query._page && req.query._limit) {
-    const pageSize = req.query._limit;
-    const page = req.query._page;
+    const pageSize = parseInt(req.query._limit);
+    const page = parseInt(req.query._page);
     query = query.skip(pageSize * (page - 1)).limit(pageSize);
   }
 
   try {
     const docs = await query.exec();
+    // Set total count for pagination metadata in headers
     res.set("X-Total-Count", totalDocs);
     res.status(200).json(docs);
   } catch (err) {
-    res.status(400).json(err);
+    console.error("Error fetching products:", err);
+    res.status(400).json({ error: "Failed to fetch products", details: err });
   }
 }
 
