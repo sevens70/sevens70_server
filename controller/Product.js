@@ -37,7 +37,11 @@ export async function fetchAllProducts(req, res) {
 
   // Filter by category
   if (req.query.category) {
-    const categories = req.query.category.split(",");
+    // const categories = req.query.category.split(",");
+    const categories = req.query.category.split(",").map(category => 
+      new RegExp(`^${category}$`, "i") // Use regex for case-insensitive match
+    );
+  
     query = query.find({ category: { $in: categories } });
     totalProductsQuery = totalProductsQuery.find({
       category: { $in: categories },
@@ -46,7 +50,9 @@ export async function fetchAllProducts(req, res) {
 
   // Filter by subcategory
   if (req.query.subcategory) {
-    const subcategories = req.query.subcategory.split(",");
+    const subcategories = req.query.subcategory.split(",").map(subcategory => 
+      new RegExp(`^${subcategory}$`, "i") 
+    );
     query = query.find({ subcategory: { $in: subcategories } });
     totalProductsQuery = totalProductsQuery.find({
       subcategory: { $in: subcategories },
@@ -66,7 +72,9 @@ export async function fetchAllProducts(req, res) {
 
   // Filter by sizes
   if (req.query.sizes) {
-    const sizes = req.query.sizes.split(",");
+    const sizes = req.query.sizes.split(",").map(sizes => 
+      new RegExp(`^${sizes}$`, "i") 
+    );
     query = query.find({
       sizes: { $elemMatch: { id: { $in: sizes } } },
     });
@@ -77,7 +85,9 @@ export async function fetchAllProducts(req, res) {
 
   // Filter by brand //   store database in lowercase()
   if (req.query.brand) {
-    const brands = req.query.brand.split(",");
+    const brands = req.query.brand.split(",").map(brand => 
+      new RegExp(`^${brand}$`, "i") 
+    );
     query = query.find({ brand: { $in: brands } });
     totalProductsQuery = totalProductsQuery.find({ brand: { $in: brands } });
   }
