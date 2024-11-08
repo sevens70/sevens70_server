@@ -2,7 +2,7 @@
 import { User } from "../model/User.js";
 
 export async function fetchUserById(req, res) {
-  const { id } = req.user; //user coming from authorize middleware 
+  const { id } = req.user; //user coming from authorize middleware
   console.log(id);
   try {
     const user = await User.findById(id);
@@ -12,6 +12,14 @@ export async function fetchUserById(req, res) {
       email: user.email,
       role: user.role,
     });
+  } catch (err) {
+    res.status(400).json(err);
+  }
+}
+export async function fetchAllUsers(req, res) {
+  try {
+    const users = await User.find({}).exec();
+    res.status(200).json(users);
   } catch (err) {
     res.status(400).json(err);
   }

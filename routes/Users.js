@@ -1,7 +1,14 @@
 import express from "express";
-import { fetchUserById, updateUser } from "../controller/User.js";
+import {
+  fetchAllUsers,
+  fetchUserById,
+  updateUser,
+} from "../controller/User.js";
 
 const userRouter = express.Router();
-userRouter.get("/own", fetchUserById).patch("/:id", updateUser);
+userRouter
+  .get("/own", fetchUserById)
+  .patch("/:id", updateUser)
+  .get("/", fetchAllUsers);
 
 export { userRouter };
