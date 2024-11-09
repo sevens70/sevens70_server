@@ -55,10 +55,10 @@ export async function fetchCategories(req, res) {
 
 export async function getSubCategory(req, res) {
   const { categoryName } = req.params;
-
   try {
-    const category = await Category.findOne({ name: categoryName });
-    console.log("1234", category);
+    const category = await Category.findOne({
+      name: categoryName.toLowerCase(),
+    });
     if (!category)
       return res
         .status(404)

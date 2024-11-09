@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 const brandSchema = new Schema({
-  label: { type: String, required: true, unique: true },
-  value: { type: String, required: true, unique: true },
+  name: { type: String, required: true, unique: true },
+  image: { type: String, required: true },
 });
 
 const virtual = brandSchema.virtual("id");

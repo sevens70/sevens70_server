@@ -19,7 +19,7 @@ import { User } from "./model/User.js";
 import { isAuth, sanitizeUser, cookieExtractor } from "./services/common.js";
 // import { resolve } from "path";
 import { categoriesRouter } from "./routes/Categories.js";
-// import { brandsRouter } from "./routes/Brands.js";
+import { brandsRouter } from "./routes/Brands.js";
 import { userRouter } from "./routes/Users.js";
 import { cartRouter } from "./routes/Cart.js";
 import { orderRouter } from "./routes/Order.js";
@@ -69,7 +69,7 @@ server.use(json()); // to parse req.body
 
 server.use("/products", productRouter);
 server.use("/categories", categoriesRouter);
-// server.use("/brands", isAuth(), brandsRouter);
+server.use("/brands", brandsRouter);
 server.use("/users", isAuth(), userRouter);
 server.use("/auth", authRouter);
 server.use("/cart", isAuth(), cartRouter);

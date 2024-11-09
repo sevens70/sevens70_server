@@ -1,7 +1,16 @@
 import express from "express";
-import { createBrand, fetchBrands } from "../controller/Brand.js";
+import {
+  createBrand,
+  deleteBrand,
+  fetchBrands,
+  updateBrand,
+} from "../controller/Brand.js";
 
 const brandsRouter = express.Router();
-brandsRouter.get("/", fetchBrands).post("/", createBrand);
+brandsRouter
+  .get("/", fetchBrands)
+  .post("/", createBrand)
+  .patch("/:id", updateBrand)
+  .delete("/:id", deleteBrand);
 
 export { brandsRouter };
