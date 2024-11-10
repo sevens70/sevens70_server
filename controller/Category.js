@@ -60,9 +60,7 @@ export async function getSubCategory(req, res) {
       name: categoryName.toLowerCase(),
     });
     if (!category)
-      return res
-        .status(404)
-        .json({ status: 404, message: "Category not found" });
+      return res.status(200).json({ status: 200, subcategories: [] });
 
     res
       .status(200)
