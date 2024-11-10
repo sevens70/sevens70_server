@@ -38,10 +38,10 @@ export async function fetchAllProducts(req, res) {
   // Filter by category
   if (req.query.category) {
     // const categories = req.query.category.split(",");
-    const categories = req.query.category.split(",").map(category => 
-      new RegExp(`^${category}$`, "i") // Use regex for case-insensitive match
+    const categories = req.query.category.split(",").map(
+      (category) => new RegExp(`^${category}$`, "i") // Use regex for case-insensitive match
     );
-  
+
     query = query.find({ category: { $in: categories } });
     totalProductsQuery = totalProductsQuery.find({
       category: { $in: categories },
@@ -50,9 +50,9 @@ export async function fetchAllProducts(req, res) {
 
   // Filter by subcategory
   if (req.query.subcategory) {
-    const subcategories = req.query.subcategory.split(",").map(subcategory => 
-      new RegExp(`^${subcategory}$`, "i") 
-    );
+    const subcategories = req.query.subcategory
+      .split(",")
+      .map((subcategory) => new RegExp(`^${subcategory}$`, "i"));
     query = query.find({ subcategory: { $in: subcategories } });
     totalProductsQuery = totalProductsQuery.find({
       subcategory: { $in: subcategories },
@@ -72,9 +72,9 @@ export async function fetchAllProducts(req, res) {
 
   // Filter by sizes
   if (req.query.sizes) {
-    const sizes = req.query.sizes.split(",").map(sizes => 
-      new RegExp(`^${sizes}$`, "i") 
-    );
+    const sizes = req.query.sizes
+      .split(",")
+      .map((sizes) => new RegExp(`^${sizes}$`, "i"));
     query = query.find({
       sizes: { $elemMatch: { id: { $in: sizes } } },
     });
@@ -85,9 +85,9 @@ export async function fetchAllProducts(req, res) {
 
   // Filter by brand //   store database in lowercase()
   if (req.query.brand) {
-    const brands = req.query.brand.split(",").map(brand => 
-      new RegExp(`^${brand}$`, "i") 
-    );
+    const brands = req.query.brand
+      .split(",")
+      .map((brand) => new RegExp(`^${brand}$`, "i"));
     query = query.find({ brand: { $in: brands } });
     totalProductsQuery = totalProductsQuery.find({ brand: { $in: brands } });
   }
@@ -117,6 +117,8 @@ export async function fetchAllProducts(req, res) {
       default:
         break;
     }
+  } else {
+    query = query.sort({ createdAt: -1 });
   }
 
   // Count total documents for pagination metadata
@@ -128,7 +130,6 @@ export async function fetchAllProducts(req, res) {
     const page = parseInt(req.query._page);
     query = query.skip(pageSize * (page - 1)).limit(pageSize);
   }
-
   try {
     const docs = await query.exec();
     // Set total count for pagination metadata in headers

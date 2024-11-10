@@ -127,7 +127,11 @@ export async function fetchOrdersByUserId(req, res) {
 
   // Sort the query if sorting parameters are provided
   if (req.query._sort && req.query._order) {
-    query = query.sort({ [req.query._sort]: req.query._order });
+    const sortField = req.query._sort;
+    const sortOrder = req.query._order.toLowerCase() === "desc" ? -1 : 1;
+    query = query.sort({ [sortField]: sortOrder });
+  } else {
+    query = query.sort({ createdAt: -1 });
   }
 
   // Get the total count of orders matching the criteria
