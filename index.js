@@ -26,6 +26,7 @@ import { orderRouter } from "./routes/Order.js";
 import { favouriteRouter } from "./routes/Favourite.js";
 import { settingsRouter } from "./routes/Settings.js";
 import { bannerRouter } from "./routes/Banner.js";
+import { topBannerRouter } from "./routes/TopBanner.js";
 
 // Webhook
 
@@ -77,6 +78,7 @@ server.use("/favourite", isAuth(), favouriteRouter);
 server.use("/orders", isAuth(), orderRouter);
 server.use("/settings", settingsRouter);
 server.use("/banner", bannerRouter);
+server.use("/topbanner", topBannerRouter);
 
 // Passport Strategies
 passport.use(
