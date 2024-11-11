@@ -22,6 +22,9 @@ export async function createOrder(req, res) {
 
   try {
     for (let item of order.items) {
+      if (!item.hasOwnProperty("review")) {
+        item.review = false;
+      }
       let product = await Product.findOne({ _id: item.product.id });
       product.stock -= item.quantity;
       if (product.stock < 0) {
