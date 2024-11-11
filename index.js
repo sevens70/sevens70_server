@@ -27,6 +27,7 @@ import { favouriteRouter } from "./routes/Favourite.js";
 import { settingsRouter } from "./routes/Settings.js";
 import { bannerRouter } from "./routes/Banner.js";
 import { topBannerRouter } from "./routes/TopBanner.js";
+import { ratingsRouter } from "./routes/Ratings.js";
 
 // Webhook
 
@@ -75,6 +76,7 @@ server.use("/users", isAuth(), userRouter);
 server.use("/auth", authRouter);
 server.use("/cart", isAuth(), cartRouter);
 server.use("/favourite", isAuth(), favouriteRouter);
+server.use("/ratings", ratingsRouter);
 server.use("/orders", isAuth(), orderRouter);
 server.use("/settings", settingsRouter);
 server.use("/banner", bannerRouter);
