@@ -15,7 +15,6 @@ export async function createUser(req, res) {
       async function (err, hashedPassword) {
         const user = new User({ ...req.body, password: hashedPassword, salt });
         const doc = await user.save();
-
         req.login(sanitizeUser(doc), (err) => {
           // this also calls serializer and adds to session
           if (err) {
@@ -25,13 +24,22 @@ export async function createUser(req, res) {
               sanitizeUser(doc),
               process.env.JWT_SECRET_KEY
             );
+
             res
               .cookie("jwt", token, {
                 expires: new Date(Date.now() + 3600000),
                 httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "None", 
+                path: "/",
               })
               .status(201)
-              .json({ id: doc.id, role: doc.role, name: doc.name });
+              .json({
+                id: doc.id,
+                role: doc.role,
+                name: doc.name,
+                token: token,
+              });
           }
         });
       }
