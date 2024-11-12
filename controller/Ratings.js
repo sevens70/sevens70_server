@@ -1,3 +1,4 @@
+import { Product } from "../model/Product.js";
 import { Ratings } from "../model/Ratings.js";
 // export async function addToRating(req, res) {
 //   const { id } = req.user;
@@ -17,12 +18,29 @@ export async function addToRating(req, res) {
   const { id } = req.user;
   console.log("rating 1234 =", req.body);
   const rating = new Ratings({ ...req.body, user: id });
+
   try {
+    // Save the rating
     const doc = await rating.save();
     const result = await doc.populate([
       { path: "product" },
       { path: "user", select: "name email addresses" },
     ]);
+
+    // Ensure req.body.product is the correct ID
+    console.log("req.body.product----------", req.body.product);
+    const updateResponse = await Product.findOneAndUpdate(
+      { _id: req.body.product },
+      { $set: { review: true } },
+      { new: true } // Optional: returns the updated document
+    );
+
+    if (updateResponse) {
+      console.log("Product review status updated to true for product:", updateResponse);
+    } else {
+      console.log("Product not found for updating review status.");
+    }
+
     res.status(201).json(result);
   } catch (err) {
     console.error("Error saving rating:", err);
