@@ -102,6 +102,8 @@ export async function fetchAllOrders(req, res) {
 
   if (req.query._sort && req.query._order) {
     query = query.sort({ [req.query._sort]: req.query._order });
+  } else {
+    query = query.sort({ createdAt: -1 });
   }
 
   const totalDocs = await totalOrdersQuery.count().exec();
