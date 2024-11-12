@@ -22,7 +22,6 @@ const productSchema = new Schema(
       max: [5, "wrong max price"],
       default: 0,
     },
-    review: { type: Boolean, default: false },
     stock: { type: Number, min: [0, "wrong min stock"], default: 0 },
     brand: { type: String, required: true },
     category: { type: String, required: true },
