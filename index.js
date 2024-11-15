@@ -40,6 +40,12 @@ const allowedOrigins = [
   "http://localhost:3001",
   "https://xartso-admin.vercel.app",
   "https://xartso-client.vercel.app",
+  "https://www.sevensbd.online",
+  "https://sevensbd.online",
+  "https://www.admin.sevensbd.online",
+  "https://admin.sevensbd.online",
+  "https://sevens70-client.vercel.app",
+  "https://sevens70-admin.vercel.app",
 ];
 // Middlewares
 server.use(cookieParser());
@@ -52,6 +58,7 @@ server.use(
 );
 server.use(passport.initialize());
 server.use(passport.session());
+// server.use(cors());
 server.use(
   cors({
     origin: (origin, callback) => {
