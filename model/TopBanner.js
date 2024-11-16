@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 
 const topBannerSchema = new Schema(
   {
-    name: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
     bannerImage: { type: String, required: true },
   },
   { timestamps: true }

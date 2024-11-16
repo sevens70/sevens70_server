@@ -1,10 +1,29 @@
 import { TopBanner } from "../model/TopBanner.js";
 
-export async function createTopBanner(req, res) {
-  const banner = new TopBanner(req.body);
+// export async function createTopBanner(req, res) {
+//   const banner = new TopBanner(req.body);
 
-  const savedBanner = await banner.save();
-  res.status(201).json(savedBanner);
+//   const savedBanner = await banner.save();
+//   res.status(201).json(savedBanner);
+// }
+export async function createTopBanner(req, res) {
+  try {
+    const { bannerImage } = req.body;
+
+    if (!bannerImage) {
+      return res.status(400).json({ message: "Banner image is required" });
+    }
+
+    const banner = new TopBanner(req.body);
+    const savedBanner = await banner.save();
+    res.status(201).json(savedBanner);
+  } catch (error) {
+    console.error(error); 
+    if (error.name === "ValidationError") {
+      return res.status(400).json({ message: error.message });
+    }
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
 }
 
 export async function fetchAllTopBanners(req, res) {
