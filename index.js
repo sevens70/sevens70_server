@@ -46,6 +46,7 @@ const allowedOrigins = [
   "https://admin.sevensbd.online",
   "https://sevens70-client.vercel.app",
   "https://sevens70-admin.vercel.app",
+  "https://sevens70.vercel.app",
 ];
 // Middlewares
 server.use(cookieParser());
