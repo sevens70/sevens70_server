@@ -9,11 +9,28 @@ cloudinary.v2.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export async function createBanner(req, res) {
-  const banner = new Banner(req.body);
+// export async function createBanner(req, res) {
+//   const banner = new Banner(req.body);
 
-  const savedBanner = await banner.save();
-  res.status(201).json(savedBanner);
+//   const savedBanner = await banner.save();
+//   res.status(201).json(savedBanner);
+
+export async function createBanner(req, res) {
+  try {
+    const banner = new Banner(req.body);
+    const savedBanner = await banner.save();
+    res.status(201).json(savedBanner);
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      res
+        .status(400)
+        .json({ message: "Validation Error", errors: error.errors });
+    } else {
+      res
+        .status(500)
+        .json({ message: "Internal Server Error", error: error.message });
+    }
+  }
 }
 
 export async function fetchAllBanners(req, res) {
