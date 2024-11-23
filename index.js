@@ -100,7 +100,6 @@ passport.use(
   ) {
     // by default passport uses username
     try {
-      // console.log("user 01", await User.find({}));
       const user = await User.findOne({ email: email });
       if (!user) {
         return done(null, false, { message: "invalid credentials" }); // for safety
