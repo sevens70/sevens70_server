@@ -66,7 +66,7 @@ export async function fetchAllRating(req, res) {
     const docs = await query
       .populate([
         { path: "product" },
-        { path: "user", select: "name email addresses" }, // Project name, email, and addresses
+        { path: "user", select: "name email" }, // Project name, email
       ])
       .exec();
 
