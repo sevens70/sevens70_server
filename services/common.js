@@ -30,8 +30,6 @@ export const cookieExtractor = function (req) {
   if (!token && req.cookies) {
     token = req.cookies["jwt"];
   }
-
-  console.log("Extracted token:", token, typeof token);
-
+  
   return token;
 };

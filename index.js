@@ -28,6 +28,7 @@ import { settingsRouter } from "./routes/Settings.js";
 import { bannerRouter } from "./routes/Banner.js";
 import { topBannerRouter } from "./routes/TopBanner.js";
 import { ratingsRouter } from "./routes/Ratings.js";
+import { bkashRouter } from "./routes/bkash.js";
 
 // Webhook
 
@@ -96,6 +97,8 @@ server.use("/orders", isAuth(), orderRouter);
 server.use("/settings", settingsRouter);
 server.use("/banner", bannerRouter);
 server.use("/topbanner", topBannerRouter);
+
+server.use("/bkash", bkashRouter)
 
 // Passport Strategies
 passport.use(
