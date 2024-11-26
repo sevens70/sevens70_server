@@ -18,6 +18,10 @@ export async function fetchOrdersByUser(req, res) {
 }
 
 export async function createOrder(req, res) {
+  if(req.body.paymentMethod === 'card') {
+    req.body.paymentStatus = 'received'
+  }
+
   const order = new Order(req.body);
 
   try {

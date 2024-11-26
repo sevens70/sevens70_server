@@ -28,6 +28,7 @@ import { settingsRouter } from "./routes/Settings.js";
 import { bannerRouter } from "./routes/Banner.js";
 import { topBannerRouter } from "./routes/TopBanner.js";
 import { ratingsRouter } from "./routes/Ratings.js";
+import { bkashRouter } from "./routes/bkash.js";
 
 // Webhook
 
@@ -53,8 +54,8 @@ server.use(cookieParser());
 server.use(
   session({
     secret: process.env.SESSION_KEY,
-    resave: false, // don't save session if unmodified
-    saveUninitialized: false, // don't create session until something stored
+    resave: false,
+    saveUninitialized: false,
   })
 );
 server.use(passport.initialize());
@@ -75,8 +76,15 @@ server.use(
   })
 );
 
-server.use(json()); // to parse req.body
+server.use(json());
 
+server.get('/health', (req, res) => {
+  res.status(200).json({
+      status: 'OK',
+      message: 'Server is running',
+      timestamp: new Date().toISOString()
+  });
+});
 server.use("/products", productRouter);
 server.use("/categories", categoriesRouter);
 server.use("/brands", brandsRouter);
@@ -89,6 +97,8 @@ server.use("/orders", isAuth(), orderRouter);
 server.use("/settings", settingsRouter);
 server.use("/banner", bannerRouter);
 server.use("/topbanner", topBannerRouter);
+
+server.use("/bkash", bkashRouter)
 
 // Passport Strategies
 passport.use(
