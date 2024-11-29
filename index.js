@@ -72,17 +72,18 @@ server.use(
     },
     credentials: true,
     exposedHeaders: ["X-Total-Count"],
+    methods: ["GET", "POST", "PATCH", "DELETE"],
     allowedHeaders: ["Authorization", "Content-Type"],
   })
 );
 
 server.use(json());
 
-server.get('/health', (req, res) => {
+server.get("/health", (req, res) => {
   res.status(200).json({
-      status: 'OK',
-      message: 'Server is running',
-      timestamp: new Date().toISOString()
+    status: "OK",
+    message: "Server is running",
+    timestamp: new Date().toISOString(),
   });
 });
 server.use("/products", productRouter);
@@ -98,7 +99,7 @@ server.use("/settings", settingsRouter);
 server.use("/banner", bannerRouter);
 server.use("/topbanner", topBannerRouter);
 
-server.use("/bkash", bkashRouter)
+server.use("/bkash", bkashRouter);
 
 // Passport Strategies
 passport.use(
