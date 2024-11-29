@@ -49,6 +49,19 @@ const allowedOrigins = [
   "https://sevens70-admin.vercel.app",
   "https://sevens70.vercel.app",
 ];
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true); // Allow the origin
+    } else {
+      callback(new Error("Not allowed by CORS")); // Block the origin
+    }
+  },
+  credentials: true,
+  exposedHeaders: ["X-Total-Count"],
+  methods: ["GET", "POST", "PATCH", "DELETE"],
+  allowedHeaders: ["Authorization", "Content-Type"],
+};
 // Middlewares
 server.use(cookieParser());
 server.use(
@@ -60,22 +73,12 @@ server.use(
 );
 server.use(passport.initialize());
 server.use(passport.session());
-// server.use(cors());
-server.use(
-  cors({
-    origin: (origin, callback) => {
-      if (allowedOrigins.includes(origin) || !origin) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-    exposedHeaders: ["X-Total-Count"],
-    methods: ["GET", "POST", "PATCH", "DELETE"],
-    allowedHeaders: ["Authorization", "Content-Type"],
-  })
-);
+
+// Use the CORS middleware
+server.use(cors(corsOptions));
+
+// Handle the OPTIONS preflight requests
+server.options("*", cors(corsOptions));
 
 server.use(json());
 
