@@ -18,7 +18,7 @@ export async function fetchUserById(req, res) {
 }
 export async function fetchAllUsers(req, res) {
   try {
-    const users = await User.find({}).exec();
+    const users = await User.find({}).select("email _id role").exec();
     res.status(200).json(users);
   } catch (err) {
     res.status(400).json(err);
