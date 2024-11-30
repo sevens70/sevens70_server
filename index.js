@@ -1,23 +1,19 @@
 import "dotenv/config";
 import express, { raw, static as serveStatic, json } from "express";
-const server = express();
 import { connect } from "mongoose";
 import cors from "cors";
 import session from "express-session";
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { pbkdf2, timingSafeEqual } from "crypto";
-import jwt from "jsonwebtoken"; // Use default import for jsonwebtoken
+import jwt from "jsonwebtoken";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import cookieParser from "cookie-parser";
-
-// Destructure from the default passport and jwt imports
 
 import { productRouter } from "./routes/Products.js";
 import { authRouter } from "./routes/Auth.js";
 import { User } from "./model/User.js";
 import { isAuth, sanitizeUser, cookieExtractor } from "./services/common.js";
-// import { resolve } from "path";
 import { categoriesRouter } from "./routes/Categories.js";
 import { brandsRouter } from "./routes/Brands.js";
 import { userRouter } from "./routes/Users.js";
@@ -36,6 +32,7 @@ const endpointSecret = process.env.ENDPOINT_SECRET;
 const opts = {};
 opts.jwtFromRequest = cookieExtractor;
 opts.secretOrKey = process.env.JWT_SECRET_KEY;
+
 const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:3001",
@@ -49,12 +46,15 @@ const allowedOrigins = [
   "https://sevens70-admin.vercel.app",
   "https://sevens70.vercel.app",
 ];
+
+// Dynamic CORS middleware
 const corsOptions = {
   origin: (origin, callback) => {
+    console.log("Origin:", origin); // Debug logging
     if (allowedOrigins.includes(origin) || !origin) {
-      callback(null, true); // Allow the origin
+      callback(null, true);
     } else {
-      callback(new Error("Not allowed by CORS")); // Block the origin
+      callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true,
@@ -62,7 +62,9 @@ const corsOptions = {
   methods: ["GET", "POST", "PATCH", "DELETE"],
   allowedHeaders: ["Authorization", "Content-Type"],
 };
+
 // Middlewares
+const server = express();
 server.use(cookieParser());
 server.use(
   session({
@@ -74,14 +76,28 @@ server.use(
 server.use(passport.initialize());
 server.use(passport.session());
 
-// Use the CORS middleware
+// CORS middleware
 server.use(cors(corsOptions));
 
-// Handle the OPTIONS preflight requests
-server.options("*", cors(corsOptions));
+// Explicit preflight request handling
+server.options("*", (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE");
+  res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.status(204).end(); // No Content response for preflight
+});
 
+// Prevent caching
+server.use((req, res, next) => {
+  res.setHeader("Cache-Control", "no-store");
+  next();
+});
+
+// JSON middleware
 server.use(json());
 
+// Routes
 server.get("/health", (req, res) => {
   res.status(200).json({
     status: "OK",
@@ -112,11 +128,10 @@ passport.use(
     password,
     done
   ) {
-    // by default passport uses username
     try {
-      const user = await User.findOne({ email: email });
+      const user = await User.findOne({ email });
       if (!user) {
-        return done(null, false, { message: "invalid credentials" }); // for safety
+        return done(null, false, { message: "Invalid credentials" });
       }
       pbkdf2(
         password,
@@ -124,15 +139,15 @@ passport.use(
         310000,
         32,
         "sha256",
-        async function (err, hashedPassword) {
-          if (!timingSafeEqual(user.password, hashedPassword)) {
-            return done(null, false, { message: "invalid credentials" });
+        (err, hashedPassword) => {
+          if (err || !timingSafeEqual(user.password, hashedPassword)) {
+            return done(null, false, { message: "Invalid credentials" });
           }
           const token = jwt.sign(
             sanitizeUser(user),
             process.env.JWT_SECRET_KEY
           );
-          done(null, { id: user.id, role: user.role, token }); // this lines sends to serializer
+          done(null, { id: user.id, role: user.role, token });
         }
       );
     } catch (err) {
@@ -147,7 +162,7 @@ passport.use(
     try {
       const user = await User.findById(jwt_payload.id);
       if (user) {
-        return done(null, sanitizeUser(user)); // this calls serializer
+        return done(null, sanitizeUser(user));
       } else {
         return done(null, false);
       }
@@ -157,26 +172,22 @@ passport.use(
   })
 );
 
-// this creates session variable req.user on being called from callbacks
-passport.serializeUser(function (user, cb) {
-  process.nextTick(function () {
-    return cb(null, { id: user.id, role: user.role });
-  });
+passport.serializeUser((user, cb) => {
+  process.nextTick(() => cb(null, { id: user.id, role: user.role }));
 });
 
-passport.deserializeUser(function (user, cb) {
-  process.nextTick(function () {
-    return cb(null, user);
-  });
+passport.deserializeUser((user, cb) => {
+  process.nextTick(() => cb(null, user));
 });
 
-main().catch((err) => console.log(err));
+// Database connection and server start
+main().catch((err) => console.error("Database connection error:", err));
 
 async function main() {
   await connect(process.env.MONGODB_URL);
-  console.log("database connected");
+  console.log("Database connected");
 }
 
 server.listen(process.env.PORT, () => {
-  console.log("server started");
+  console.log(`Server started on port ${process.env.PORT}`);
 });
