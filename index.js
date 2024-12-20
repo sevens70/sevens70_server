@@ -23,6 +23,8 @@ import { favouriteRouter } from "./routes/Favourite.js";
 import { settingsRouter } from "./routes/Settings.js";
 import { bannerRouter } from "./routes/Banner.js";
 import { topBannerRouter } from "./routes/TopBanner.js";
+import { sunglassBannerRouter } from "./routes/SunglassBanner.js";
+import { sunglassProductRouter } from "./routes/SunglassProduct.js";
 import { ratingsRouter } from "./routes/Ratings.js";
 import { bkashRouter } from "./routes/bkash.js";
 
@@ -117,6 +119,8 @@ server.use("/orders", isAuth(), orderRouter);
 server.use("/settings", settingsRouter);
 server.use("/banner", bannerRouter);
 server.use("/topbanner", topBannerRouter);
+server.use("/sunglassBanner", sunglassBannerRouter);
+server.use("/sunglassProduct", sunglassProductRouter);
 
 server.use("/bkash", bkashRouter);
 
