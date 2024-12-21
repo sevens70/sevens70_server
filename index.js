@@ -27,6 +27,7 @@ import { sunglassBannerRouter } from "./routes/SunglassBanner.js";
 import { sunglassProductRouter } from "./routes/SunglassProduct.js";
 import { ratingsRouter } from "./routes/Ratings.js";
 import { bkashRouter } from "./routes/bkash.js";
+import { landingPageOrderRouter } from "./routes/LandingPageOrder.js";
 
 // Webhook
 
@@ -116,6 +117,7 @@ server.use("/cart", isAuth(), cartRouter);
 server.use("/favourite", isAuth(), favouriteRouter);
 server.use("/ratings", ratingsRouter);
 server.use("/orders", isAuth(), orderRouter);
+server.use("/order", landingPageOrderRouter);
 server.use("/settings", settingsRouter);
 server.use("/banner", bannerRouter);
 server.use("/topbanner", topBannerRouter);
