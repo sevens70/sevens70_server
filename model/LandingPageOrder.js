@@ -49,7 +49,5 @@ orderSchema.set("toJSON", {
 });
 
 // Export the model, checking if it already exists
-const LandingPageOrder =
+export const LandingPageOrder =
   mongoose.models.Order || mongoose.model("Order", orderSchema);
-
-export { LandingPageOrder };

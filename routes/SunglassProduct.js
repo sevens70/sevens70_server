@@ -1,22 +1,17 @@
-// import express from "express";
-// // import {
-// //   createBrand,
-// //   deleteBrand,
-// //   fetchBrands,
-// //   updateBrand,
-// // } from "../controller/Brand.js";
-// import {
-//   createsunglassProduct,
-//   deletesunglassProduct,
-//   fetchsunglassProduct,
-//   updatesunglassProduct,
-// } from "../controller/sunglassProduct.js";
+import express from "express";
 
-// const sunglassProductRouter = express.Router();
-// sunglassProductRouter
-//   .get("/", fetchsunglassProduct)
-//   .post("/", createsunglassProduct)
-//   .patch("/:id", updatesunglassProduct)
-//   .delete("/:id", deletesunglassProduct);
+import {
+  createsunglassProduct,
+  deletesunglassProduct,
+  fetchsunglassProduct,
+  updatesunglassProduct,
+} from "../controller/SunglassProduct.js";
 
-// export { sunglassProductRouter };
+const sunglassProductRouter = express.Router();
+sunglassProductRouter
+  .get("/", fetchsunglassProduct)
+  .post("/", createsunglassProduct)
+  .patch("/:id", updatesunglassProduct)
+  .delete("/:id", deletesunglassProduct);
+
+export { sunglassProductRouter };

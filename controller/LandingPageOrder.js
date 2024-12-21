@@ -1,10 +1,6 @@
-// const { Order } = require("../model/Order");
-// const { Product } = require("../model/Product");
-// const { User } = require("../model/User");
-// const { sendMail, invoiceTemplate } = require("../services/common.js");
-
 import { LandingPageOrder } from "../model/LandingPageOrder.js";
-import { Product } from "../model/Product.js";
+// import { Product } from "../model/Product.js";
+import { sunglassProduct } from "../model/SunglassProduct.js";
 // import { User } from "../model/User.js";
 
 // export async function fetchOrdersByUser(req, res) {
@@ -26,16 +22,13 @@ export async function createOrder(req, res) {
 
   try {
     for (let item of order.items) {
-      // if (!item?.product.hasOwnProperty("review")) {
-      //   item.product.review = false;
+      let product = await sunglassProduct.findOne({ _id: item.product.id });
+      // product.stock -= item.quantity;
+      // if (product.stock < 0) {
+      //   return res
+      //     .status(400)
+      //     .json({ error: "Insufficient stock for : " + product.title });
       // }
-      let product = await Product.findOne({ _id: item.product.id });
-      product.stock -= item.quantity;
-      if (product.stock < 0) {
-        return res
-          .status(400)
-          .json({ error: "Insufficient stock for : " + product.title });
-      }
 
       await product.save();
     }
@@ -45,5 +38,3 @@ export async function createOrder(req, res) {
     res.status(400).json({ error: err.message || "Failed to create order" });
   }
 }
-
-// without pagination
