@@ -121,8 +121,8 @@ server.use("/order", landingPageOrderRouter);
 server.use("/settings", settingsRouter);
 server.use("/banner", bannerRouter);
 server.use("/topbanner", topBannerRouter);
-server.use("/sunglassBanner", sunglassBannerRouter);
-server.use("/sunglassProduct", sunglassProductRouter);
+// server.use("/sunglassBanner", sunglassBannerRouter);
+// server.use("/sunglassProduct", sunglassProductRouter);
 
 server.use("/bkash", bkashRouter);
 
